@@ -31,6 +31,7 @@ def mainFunc():
 		TARGET_ = str(input("IP address && mode --> "))
 	except KeyboardInterrupt:
 		print("Stopping...")
+
 		raise SystemExit
 
 	conv = list(TARGET_)
@@ -84,7 +85,7 @@ def mainFunc():
 					tshark_file.wait()
 
 				except KeyboardInterrupt:
-					print("Stopping")
+					print("Stopping...")
 
 					Popen(['killall', 'arpspoof'])
 
@@ -95,17 +96,25 @@ def mainFunc():
 					sleep(4)
 					raise SystemExit
 
-# tshark: A capture filter was specified both with "-f" and with additional command-line arguments. Ошибка
+# tshark: A capture filter was specified both with "-f" and with additional command-line arguments.
 		else:
 			print("Unknown command!")
 
 			Popen(["killall", "arpspoof"])
+
+			open('/proc/sys/net/ipv4/ip_forward', 'w').write('0')
+
+			sleep(4)
 			raise SystemExit
 
 	except IndexError:
 		print("Command without mode argument!")
+
+		Popen(['killall', 'arpspoof'])
+
+		open('/proc/sys/net/ipv4/ip_forward', 'w').write('0')
+
+		sleep(4)
 		raise SystemExit
 
 mainFunc()
-
-#Добавить завершение предыдущих процессов, проверить пересылку пакетов там была ошибка с перезаписью...
